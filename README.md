@@ -55,3 +55,32 @@ class Solution:
                     res=max(res,dp[l][r])
         return res
 
+leetcode 430
+"""
+# Definition for a Node.
+class Node:
+    def __init__(self, val, prev, next, child):
+        self.val = val
+        self.prev = prev
+        self.next = next
+        self.child = child
+"""
+
+class Solution:
+    def flatten(self, head: 'Node') -> 'Node':
+        if not head:return head
+        self.l=[]
+        def inorder(node,l):
+            if not node:return
+            l.append(node.val)
+            inorder(node.child,l)
+            inorder(node.next,l)
+        
+        inorder(head,self.l)
+        new_head=Node(self.l[0],None,None,None)
+        pre=new_head
+        for i in range(1,len(self.l)):
+            cur=Node(self.l[i],pre,None,None)
+            pre.next=cur
+            pre=cur
+        return new_head
