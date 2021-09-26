@@ -101,3 +101,32 @@ class Solution:
                 for k in range(i+1,j):#在区间[i,j]中间切一刀
                     dp[i][j]=min(dp[i][j],dp[i][k]+dp[k][j]+new_cuts[j]-new_cuts[i])
         return dp[0][m-1]
+
+
+#leetcode 1745
+                                                class Solution:
+    def checkPartitioning(self, s: str) -> bool:
+        size=len(s)
+        dp=[[False]*size for _ in range(size)]
+        for i in range(size): #所有长度为1的子串为回文子串
+            dp[i][i]=True
+        for i in range(size-1): #判断所有长度为2的子串是否为回文字串
+            if s[i]==s[i+1]:
+                dp[i][i+1]=True
+        for l in range(2,size): #判断长度为3到size的子串是否为回文字串
+            for i in range(size-l): #遍历字符串开始位置
+                j=i+l
+                if s[i]==s[j] and dp[i+1][j-1]==True:
+                    dp[i][j]=True
+        #print(dp)
+        
+        now={0} #记录下一轮找回文字串的首字母位置
+        for _ in range(3): #一共找3轮，看是否可以找到s末尾
+            tem=set()
+            for i in now:
+                for j in range(i,size):
+                    if dp[i][j]==True:
+                        tem.add(j+1) #记录下一轮找回文字串的首字母位置
+            now=tem
+            
+        return size in now
