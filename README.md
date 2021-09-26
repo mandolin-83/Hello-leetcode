@@ -84,3 +84,20 @@ class Solution:
             pre.next=cur
             pre=cur
         return new_head
+  # 1547
+  class Solution:
+    def minCost(self, n: int, cuts: List[int]) -> int:
+        cuts.sort()
+        new_cuts=[0]+cuts+[n]
+        #n=7,cuts=[1,3],new_cuts=[0,1,3,7]
+        m=len(new_cuts)
+        dp=[[0]*m for _ in range(m)] 
+        #n=7,cuts=[1,3],new_cuts=[0,1,3,7]
+        #先三个中间切一刀(切点1，3),再四个中间切一刀（切点1，3，中间其他点前面已经切好）
+        for l in range(2,m): #len=2,3
+            for i in range(0,m-l): #i为左端点，i+l<m 
+                j=i+l  #j为右端点
+                dp[i][j]=float("inf")
+                for k in range(i+1,j):#在区间[i,j]中间切一刀
+                    dp[i][j]=min(dp[i][j],dp[i][k]+dp[k][j]+new_cuts[j]-new_cuts[i])
+        return dp[0][m-1]
