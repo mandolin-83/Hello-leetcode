@@ -130,3 +130,28 @@ class Solution:
             now=tem
             
         return size in now
+    
+  #1931
+    class Solution:
+    def minimizeTheDifference(self, mat: List[List[int]], target: int) -> int:
+        m,n=len(mat),len(mat[0])
+        f={0}
+        large=float("inf") #记录大于target的最小值
+        for i in range(m):
+            g=set() 
+#下一个大于target的值来源于两种途径：本行里的每个数加上f(0到上一行中所有小于target的和)大于target的最小值，或者（0-上一行）最小的大于target的值加上本行的数，两者取小
+            next_large=float("inf")
+            for x in mat[i]:
+                for j in f:
+                    if x+j>=target:#本行里的1个数加上f(f中的数都<target)里的所有值
+                        next_large=min(next_large,x+j)
+                    else:
+                        g.add(x+j)
+                next_large=min(next_large,large+x)#（0-上一行）最小的大于target的值加上本行的数
+            f=g
+            large=next_large
+        
+        ans=abs(target-large) #计算target-大于target的最小数
+        for i in f:
+            ans=min(ans,abs(i-target)) #计算target-小于target的最大数
+        return ans
