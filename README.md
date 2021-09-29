@@ -155,3 +155,23 @@ class Solution:
         for i in f:
             ans=min(ans,abs(i-target)) #计算target-小于target的最大数
         return ans
+ #1049
+                                                                  class Solution:
+    def lastStoneWeightII(self, stones: List[int]) -> int:
+        # 0，1背包问题：n=len(stones)个石头可否装满容量为m=sum(stones)//2的背包
+        n,m=len(stones),sum(stones)//2
+        dp=[[False]*(m+1) for _ in range(n+1)]
+        dp[0][0]=True
+
+        for i in range(n):
+            for j in range(m+1):
+                if stones[i]>j: #背包容量不够，选择不放
+                    dp[i+1][j]=dp[i][j]
+                else: #背包容量够，选择不放或者放
+                    dp[i+1][j]=dp[i][j] or dp[i][j-stones[i]]
+        
+        
+        total=sum(stones)
+        for j in range(m,-1,-1): #用n个石头能装满的最大j (0<=j<=m)
+            if dp[n][j]:
+                return total-2*j
